@@ -7,7 +7,7 @@
 
 bool dudchenko_o_hoare_batcher_seq::TestTaskSequential::PreProcessingImpl() {
   unsigned int input_size = task_data->inputs_count[0];
-  auto *in_ptr = reinterpret_cast<int*>(task_data->inputs[0]);
+  auto* in_ptr = reinterpret_cast<int*>(task_data->inputs[0]);
   input_ = std::vector<int>(in_ptr, in_ptr + input_size);
 
   unsigned int output_size = task_data->outputs_count[0];
