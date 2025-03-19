@@ -7,7 +7,7 @@
 
 bool dudchenko_o_hoare_batcher_seq::TestTaskSequential::PreProcessingImpl() {
   unsigned int input_size = task_data->inputs_count[0];
-  auto *in_ptr = reinterpret_cast<int *>(task_data->inputs[0]);
+  auto *in_ptr = reinterpret_cast<int*>(task_data->inputs[0]);
   input_ = std::vector<int>(in_ptr, in_ptr + input_size);
 
   unsigned int output_size = task_data->outputs_count[0];
@@ -28,7 +28,7 @@ bool dudchenko_o_hoare_batcher_seq::TestTaskSequential::RunImpl() {
 
 bool dudchenko_o_hoare_batcher_seq::TestTaskSequential::PostProcessingImpl() {
   for (size_t i = 0; i < output_.size(); i++) {
-    reinterpret_cast<int *>(task_data->outputs[0])[i] = output_[i];
+    reinterpret_cast<int*>(task_data->outputs[0])[i] = output_[i];
   }
   return true;
 }
@@ -55,16 +55,15 @@ int dudchenko_o_hoare_batcher_seq::TestTaskSequential::Partition(std::vector<int
   return (i + 1);
 }
 
-void dudchenko_o_hoare_batcher_seq::TestTaskSequential::BatcherMerge(std::vector<int>& arr, int left, int mid, int right) {
+void dudchenko_o_hoare_batcher_seq::TestTaskSequential::BatcherMerge(std::vector<int>& arr, int left, int mid,
+                                                                     int right) {
   int n1 = mid - left + 1;
   int n2 = right - mid;
 
   std::vector<int> L(n1), R(n2);
 
-  for (int i = 0; i < n1; i++)
-    L[i] = arr[left + i];
-  for (int j = 0; j < n2; j++)
-    R[j] = arr[mid + 1 + j];
+  for (int i = 0; i < n1; i++) L[i] = arr[left + i];
+  for (int j = 0; j < n2; j++) R[j] = arr[mid + 1 + j];
 
   int i = 0, j = 0, k = left;
 
