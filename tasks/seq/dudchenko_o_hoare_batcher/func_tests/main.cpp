@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <cstdlib>
 #include <ctime>
 #include <fstream>

@@ -55,7 +55,8 @@ int dudchenko_o_hoare_batcher_seq::TestTaskSequential::Partition(std::vector<int
   return (i + 1);
 }
 
-void dudchenko_o_hoare_batcher_seq::TestTaskSequential::BatcherMerge(std::vector<int>& arr, int left, int mid, int right) {
+void dudchenko_o_hoare_batcher_seq::TestTaskSequential::BatcherMerge(std::vector<int>& arr, int left, int mid,
+                                                                     int right) {
   int n1 = mid - left + 1;
   int n2 = right - mid;
 
