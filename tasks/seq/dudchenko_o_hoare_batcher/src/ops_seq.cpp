@@ -6,7 +6,7 @@
 #include <vector>
 
 bool dudchenko_o_hoare_batcher_seq::TestTaskSequential::PreProcessingImpl() {
-  if (!task_data || !task_data->inputs[0] || !task_data->outputs[0]) {
+  if (!task_data || (task_data->inputs[0] == nullptr) || (task_data->outputs[0] == nullptr)) {
     return false;
   }
 
@@ -21,7 +21,7 @@ bool dudchenko_o_hoare_batcher_seq::TestTaskSequential::PreProcessingImpl() {
 }
 
 bool dudchenko_o_hoare_batcher_seq::TestTaskSequential::ValidationImpl() {
-  if (!task_data || !task_data->inputs[0] || !task_data->outputs[0]) {
+  if (!task_data || (task_data->inputs[0] == nullptr) || (task_data->outputs[0] == nullptr)) {
     return false;
   }
 
@@ -39,7 +39,7 @@ bool dudchenko_o_hoare_batcher_seq::TestTaskSequential::RunImpl() {
 }
 
 bool dudchenko_o_hoare_batcher_seq::TestTaskSequential::PostProcessingImpl() {
-  if (!task_data || !task_data->outputs[0]) {
+  if (!task_data || (task_data->outputs[0] == nullptr)) {
     return false;
   }
 
