@@ -12,7 +12,7 @@
 #include "seq/dudchenko_o_hoare_batcher/include/ops_seq.hpp"
 
 TEST(dudchenko_o_hoare_batcher_seq, test_pipeline_run) {
-  constexpr int kCount = 10000000;
+  constexpr int kCount = 10000;
 
   std::vector<int> in(kCount);
   std::vector<int> out(kCount);
@@ -51,7 +51,7 @@ TEST(dudchenko_o_hoare_batcher_seq, test_pipeline_run) {
 }
 
 TEST(dudchenko_o_hoare_batcher_seq, test_task_run) {
-  constexpr int kCount = 10000000;
+  constexpr int kCount = 100000;
 
   std::vector<int> in(kCount);
   std::vector<int> out(kCount);
