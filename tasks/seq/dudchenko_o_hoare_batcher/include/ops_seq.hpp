@@ -18,8 +18,8 @@ class TestTaskSequential : public ppc::core::Task {
  private:
   std::vector<int> input_, output_;
   void QuickSort(std::vector<int>& arr, int low, int high);
-  int Partition(std::vector<int>& arr, int low, int high);
-  void BatcherMerge(std::vector<int>& arr, int left, int mid, int right);
+  static int Partition(std::vector<int>& arr, int low, int high);
+  static void BatcherMerge(std::vector<int>& arr, int left, int mid, int right);
 };
 
 }  // namespace dudchenko_o_hoare_batcher_seq

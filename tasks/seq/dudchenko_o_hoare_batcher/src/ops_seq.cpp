@@ -21,7 +21,7 @@ bool dudchenko_o_hoare_batcher_seq::TestTaskSequential::ValidationImpl() {
 }
 
 bool dudchenko_o_hoare_batcher_seq::TestTaskSequential::RunImpl() {
-  QuickSort(input_, 0, input_.size() - 1);
+  QuickSort(input_, 0, static_cast<int>(input_.size()) - 1);
   output_ = input_;
   return true;
 }
@@ -55,37 +55,43 @@ int dudchenko_o_hoare_batcher_seq::TestTaskSequential::Partition(std::vector<int
   return (i + 1);
 }
 
-void dudchenko_o_hoare_batcher_seq::TestTaskSequential::BatcherMerge(std::vector<int>& arr, int left, int mid,
-                                                                     int right) {
+void dudchenko_o_hoare_batcher_seq::TestTaskSequential::BatcherMerge(std::vector<int>& arr, int left, int mid, int right) {
   int n1 = mid - left + 1;
   int n2 = right - mid;
 
-  std::vector<int> L(n1), R(n2);
+  std::vector<int> left_array(n1);
+  std::vector<int> right_array(n2);
 
-  for (int i = 0; i < n1; i++) L[i] = arr[left + i];
-  for (int j = 0; j < n2; j++) R[j] = arr[mid + 1 + j];
+  for (int i = 0; i < n1; i++) {
+    left_array[i] = arr[left + i];
+  }
+  for (int j = 0; j < n2; j++) {
+    right_array[j] = arr[mid + 1 + j];
+  }
 
-  int i = 0, j = 0, k = left;
+  int i = 0;
+  int j = 0;
+  int k = left;
 
   while (i < n1 && j < n2) {
-    if (L[i] <= R[j]) {
-      arr[k] = L[i];
+    if (left_array[i] <= right_array[j]) {
+      arr[k] = left_array[i];
       i++;
     } else {
-      arr[k] = R[j];
+      arr[k] = right_array[j];
       j++;
     }
     k++;
   }
 
   while (i < n1) {
-    arr[k] = L[i];
+    arr[k] = left_array[i];
     i++;
     k++;
   }
 
   while (j < n2) {
-    arr[k] = R[j];
+    arr[k] = right_array[j];
     j++;
     k++;
   }

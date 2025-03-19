@@ -2,8 +2,8 @@
 
 #include <algorithm>
 #include <chrono>
-#include <cstddef>
-#include <cstdint>
+#include <cstdlib>
+#include <ctime>
 #include <memory>
 #include <vector>
 
@@ -46,7 +46,7 @@ TEST(dudchenko_o_hoare_batcher_seq, test_pipeline_run) {
   ppc::core::Perf::PrintPerfStatistic(perf_results);
 
   std::vector<int> sorted_in = in;
-  std::sort(sorted_in.begin(), sorted_in.end());
+  std::ranges::sort(sorted_in);
   ASSERT_EQ(sorted_in, out);
 }
 
@@ -85,6 +85,6 @@ TEST(dudchenko_o_hoare_batcher_seq, test_task_run) {
   ppc::core::Perf::PrintPerfStatistic(perf_results);
 
   std::vector<int> sorted_in = in;
-  std::sort(sorted_in.begin(), sorted_in.end());
+  std::ranges::sort(sorted_in);
   ASSERT_EQ(sorted_in, out);
 }

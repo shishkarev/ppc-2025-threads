@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 
 #include <algorithm>
+#include <cstdlib>
+#include <ctime>
 #include <cstddef>
 #include <cstdint>
 #include <fstream>
@@ -36,7 +38,7 @@ TEST(dudchenko_o_hoare_batcher_seq, test_sort_50) {
   test_task_sequential.PostProcessing();
 
   std::vector<int> sorted_in = in;
-  std::sort(sorted_in.begin(), sorted_in.end());
+  std::ranges::sort(sorted_in);
   EXPECT_EQ(sorted_in, out);
 }
 
@@ -71,6 +73,6 @@ TEST(dudchenko_o_hoare_batcher_seq, test_sort_100_from_file) {
   test_task_sequential.PostProcessing();
 
   std::vector<int> sorted_in = in;
-  std::sort(sorted_in.begin(), sorted_in.end());
+  std::ranges::sort(sorted_in);
   EXPECT_EQ(sorted_in, out);
 }
