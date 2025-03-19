@@ -12,7 +12,7 @@
 #include "seq/dudchenko_o_hoare_batcher/include/ops_seq.hpp"
 
 TEST(dudchenko_o_hoare_batcher_seq, test_pipeline_run) {
-  constexpr int kCount = 1000;
+  constexpr int kCount = 10000000;
 
   std::vector<int> in(kCount);
   std::vector<int> out(kCount);
@@ -31,7 +31,7 @@ TEST(dudchenko_o_hoare_batcher_seq, test_pipeline_run) {
   auto test_task_sequential = std::make_shared<dudchenko_o_hoare_batcher_seq::TestTaskSequential>(task_data_seq);
 
   auto perf_attr = std::make_shared<ppc::core::PerfAttr>();
-  perf_attr->num_running = 10;
+  perf_attr->num_running = 1000;
   const auto t0 = std::chrono::high_resolution_clock::now();
   perf_attr->current_timer = [&] {
     auto current_time_point = std::chrono::high_resolution_clock::now();
@@ -51,7 +51,7 @@ TEST(dudchenko_o_hoare_batcher_seq, test_pipeline_run) {
 }
 
 TEST(dudchenko_o_hoare_batcher_seq, test_task_run) {
-  constexpr int kCount = 1000;
+  constexpr int kCount = 10000000;
 
   std::vector<int> in(kCount);
   std::vector<int> out(kCount);
@@ -70,7 +70,7 @@ TEST(dudchenko_o_hoare_batcher_seq, test_task_run) {
   auto test_task_sequential = std::make_shared<dudchenko_o_hoare_batcher_seq::TestTaskSequential>(task_data_seq);
 
   auto perf_attr = std::make_shared<ppc::core::PerfAttr>();
-  perf_attr->num_running = 10;
+  perf_attr->num_running = 1000;
   const auto t0 = std::chrono::high_resolution_clock::now();
   perf_attr->current_timer = [&] {
     auto current_time_point = std::chrono::high_resolution_clock::now();
