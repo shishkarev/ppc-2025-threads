@@ -26,6 +26,7 @@ bool dudchenko_o_hoare_batcher_seq::TestTaskSequential::ValidationImpl() {
 
 bool dudchenko_o_hoare_batcher_seq::TestTaskSequential::RunImpl() {
   QuickSort(input_, 0, static_cast<int>(input_.size()) - 1);
+  output_.clear();
   output_ = input_;
   return true;
 }
