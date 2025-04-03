@@ -35,6 +35,7 @@ bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::ValidationImpl() {
 bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::RunImpl() {
   if (input_.size() < 3) {
     output_.clear();
+    output_.shrink_to_fit();
     for (int i = 0; i < static_cast<int>(input_.size()); ++i) {
       output_.push_back(input_[i]);
     }
@@ -42,6 +43,7 @@ bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::RunImpl() {
   }
 
   output_.clear();
+  output_.shrink_to_fit();
 
   int start_point = 0;
 #pragma omp parallel
@@ -64,9 +66,11 @@ bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::RunImpl() {
   }
 
   int p = start_point;
+  std::vector<Vertex> local_output;
+
   do {
 #pragma omp critical
-    output_.push_back(input_[p]);
+    local_output.push_back(input_[p]);  
 
     int q = (p + 1) % static_cast<int>(input_.size());
 
@@ -91,6 +95,8 @@ bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::RunImpl() {
     p = q;
   } while (p != start_point);
 
+  output_ = std::move(local_output);
+
   return true;
 }
 
@@ -99,7 +105,7 @@ bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::PostProcessingImpl
 
   int min_size = std::min(static_cast<int>(output_.size()), static_cast<int>(task_data->outputs_count[0]));
 
-  if (output_.size() >= min_size) {
+  if (output_.size() >= static_cast<size_t>(min_size)) {
     std::copy(output_.begin(), output_.begin() + min_size, out_ptr);
   }
 
