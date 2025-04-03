@@ -62,9 +62,7 @@ bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::RunImpl() {
       const auto angle = input_[p].Angle(input_[q], input_[i]);
       if (angle < 0 || (angle == 0 && input_[p].Length(input_[i]) > input_[p].Length(input_[q]))) {
 #pragma omp critical
-        {
-          q = i;
-        }
+        { q = i; }
       }
     }
     p = static_cast<int>(q);

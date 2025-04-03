@@ -26,8 +26,7 @@ TEST(shishkarev_a_gift_wraping_algorithm_omp, test_pipeline_run) {
   task_data_omp->outputs.emplace_back(reinterpret_cast<uint8_t*>(out.data()));
   task_data_omp->outputs_count.emplace_back(out.size());
 
-  auto test_task_omp =
-      std::make_shared<shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP>(task_data_omp);
+  auto test_task_omp = std::make_shared<shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP>(task_data_omp);
 
   auto perf_attr = std::make_shared<ppc::core::PerfAttr>();
   perf_attr->num_running = 10;
@@ -61,8 +60,7 @@ TEST(shishkarev_a_gift_wraping_algorithm_omp, test_task_run) {
   task_data_omp->outputs.emplace_back(reinterpret_cast<uint8_t*>(out.data()));
   task_data_omp->outputs_count.emplace_back(out.size());
 
-  auto test_task_omp =
-      std::make_shared<shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP>(task_data_omp);
+  auto test_task_omp = std::make_shared<shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP>(task_data_omp);
 
   auto perf_attr = std::make_shared<ppc::core::PerfAttr>();
   perf_attr->num_running = 10000;
