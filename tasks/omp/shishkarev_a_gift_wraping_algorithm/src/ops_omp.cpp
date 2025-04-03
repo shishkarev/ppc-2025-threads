@@ -66,7 +66,7 @@ bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::RunImpl() {
   int p = start_point;
   do {
 #pragma omp critical
-    output_.push_back(input_[p]);  
+    output_.push_back(input_[p]);
 
     int q = (p + 1) % static_cast<int>(input_.size());
 
