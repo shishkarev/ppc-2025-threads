@@ -124,6 +124,11 @@ bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::RunImpl() {
 bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::PostProcessingImpl() {
   auto* out_ptr = reinterpret_cast<Vertex*>(task_data->outputs[0]);
   size_t copy_size = std::min(output_.size(), static_cast<size_t>(task_data->outputs_count[0]));
-  std::copy(output_.begin(), output_.begin() + copy_size, out_ptr);
+  if (copy_size > 0) {
+    if (out_ptr == nullptr) {
+        return false;
+    }
+    std::copy(output_.begin(), output_.begin() + copy_size, out_ptr);
+  }
   return true;
 }
