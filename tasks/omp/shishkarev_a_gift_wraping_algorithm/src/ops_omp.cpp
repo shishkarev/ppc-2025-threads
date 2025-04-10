@@ -104,17 +104,16 @@ bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::RunImpl() {
         q = local_qs[0];
         for (int k = 1; k < num_threads; ++k) {
           const auto angle = input_[p].Angle(input_[q], input_[local_qs[k]]);
-            if (angle < 0 || (angle == 0 && input_[p].Length(input_[local_qs[k]]) > input_[p].Length(input_[q]))) {
-              q = local_qs[k];
+          if (angle < 0 || (angle == 0 && input_[p].Length(input_[local_qs[k]]) > input_[p].Length(input_[q]))) {
+            q = local_qs[k];
           }
         }
       }
     }
 
-     if (q == -1 || q == p) {
-       break;
-     }
-
+    if (q == -1 || q == p) {
+      break;
+    }
 
     p = q;
   } while (p != start_point);
