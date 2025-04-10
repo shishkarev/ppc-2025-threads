@@ -47,7 +47,11 @@ bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::ValidationImpl() {
 
 bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::RunImpl() {
   if (input_.size() < 3) {
-    output_.assign(input_.begin(), input_.end());
+    if (input_.empty()) {
+      output_.clear();
+    } else {
+      output_.assign(input_.begin(), input_.end());
+    }
     return true;
   }
 
