@@ -43,7 +43,7 @@ bool dudchenko_o_hoare_batcher_omp::TestTaskOpenMP::RunImpl() {
 
 bool dudchenko_o_hoare_batcher_omp::TestTaskOpenMP::PostProcessingImpl() {
 #pragma omp parallel for
-  for (size_t i = 0; i < output_.size(); i++) {
+  for (int i = 0; i < static_cast<int>(output_.size()); i++) {
     reinterpret_cast<int*>(task_data->outputs[0])[i] = output_[i];
   }
   return true;
@@ -53,13 +53,14 @@ void dudchenko_o_hoare_batcher_omp::TestTaskOpenMP::QuickSort(std::vector<int>& 
   if (low < high) {
     int pi = Partition(arr, low, high);
 
-#pragma omp task shared(arr)
-    { QuickSort(arr, low, pi - 1); }
+#pragma omp parallel sections
+    {
+#pragma omp section
+      { QuickSort(arr, low, pi - 1); }
 
-#pragma omp task shared(arr)
-    { QuickSort(arr, pi + 1, high); }
-
-#pragma omp taskwait
+#pragma omp section
+      { QuickSort(arr, pi + 1, high); }
+    }
   }
 }
 
