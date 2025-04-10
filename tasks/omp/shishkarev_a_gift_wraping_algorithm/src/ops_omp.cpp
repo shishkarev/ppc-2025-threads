@@ -126,7 +126,7 @@ bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::PostProcessingImpl
   size_t copy_size = std::min(output_.size(), static_cast<size_t>(task_data->outputs_count[0]));
   if (copy_size > 0) {
     if (out_ptr == nullptr) {
-        return false;
+      return false;
     }
     std::copy(output_.begin(), output_.begin() + copy_size, out_ptr);
   }
