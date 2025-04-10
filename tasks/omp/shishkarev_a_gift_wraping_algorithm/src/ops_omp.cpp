@@ -26,8 +26,8 @@ bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::PreProcessingImpl(
 }
 
 bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::ValidationImpl() {
-  if (task_data->inputs_count.size() != 1 || task_data->outputs_count.size() != 1 ||
-      task_data->inputs.size() != 1 || task_data->outputs.size() != 1) {
+  if (task_data->inputs_count.size() != 1 || task_data->outputs_count.size() != 1 || task_data->inputs.size() != 1 ||
+      task_data->outputs.size() != 1) {
     return false;
   }
 
