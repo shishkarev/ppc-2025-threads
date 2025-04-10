@@ -1,6 +1,7 @@
 #include "omp/dudchenko_o_hoare_batcher/include/ops_omp.hpp"
 
 #include <omp.h>
+
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
@@ -35,7 +36,7 @@ bool dudchenko_o_hoare_batcher_omp::TestTaskOpenMP::RunImpl() {
 #pragma omp single nowait
     { QuickSort(input_, 0, static_cast<int>(input_.size()) - 1); }
   }
-  
+
   output_ = input_;
   return true;
 }
@@ -51,13 +52,13 @@ bool dudchenko_o_hoare_batcher_omp::TestTaskOpenMP::PostProcessingImpl() {
 void dudchenko_o_hoare_batcher_omp::TestTaskOpenMP::QuickSort(std::vector<int>& arr, int low, int high) {
   if (low < high) {
     int pi = Partition(arr, low, high);
-    
+
 #pragma omp task shared(arr)
     { QuickSort(arr, low, pi - 1); }
-    
-#pragma omp task shared(arr) 
+
+#pragma omp task shared(arr)
     { QuickSort(arr, pi + 1, high); }
-    
+
 #pragma omp taskwait
   }
 }
@@ -76,8 +77,7 @@ int dudchenko_o_hoare_batcher_omp::TestTaskOpenMP::Partition(std::vector<int>& a
   return (i + 1);
 }
 
-void dudchenko_o_hoare_batcher_omp::TestTaskOpenMP::BatcherMerge(std::vector<int>& arr, int left, int mid,
-                                                                     int right) {
+void dudchenko_o_hoare_batcher_omp::TestTaskOpenMP::BatcherMerge(std::vector<int>& arr, int left, int mid, int right) {
   int n1 = mid - left + 1;
   int n2 = right - mid;
 
@@ -92,7 +92,7 @@ void dudchenko_o_hoare_batcher_omp::TestTaskOpenMP::BatcherMerge(std::vector<int
         left_array[i] = arr[left + i];
       }
     }
-    
+
 #pragma omp section
     {
       for (int j = 0; j < n2; j++) {
