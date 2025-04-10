@@ -58,9 +58,7 @@ int FindNextPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_omp::Ver
     int thread_id = omp_get_thread_num();
 
 #pragma omp single
-    {
-      local_qs.resize(num_threads);
-    }
+    { local_qs.resize(num_threads); }
 
     int thread_local_q = initial_candidate;
 
@@ -148,7 +146,7 @@ bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::RunImpl() {
   int start_point = FindStartPoint(input_);
   int p = start_point;
   std::vector<Vertex> hull_points;
-    do {
+  do {
     hull_points.push_back(input_[p]);
     int q = FindNextPoint(input_, p);
     if (q == -1 || q == p) {
