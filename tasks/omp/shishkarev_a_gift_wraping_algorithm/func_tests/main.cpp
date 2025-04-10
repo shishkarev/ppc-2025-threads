@@ -91,7 +91,7 @@ TEST(shishkarev_a_gift_wraping_algorithm_omp, test_convex_hull_large) {
 }
 
 TEST(shishkarev_a_gift_wraping_algorithm_omp, test_convex_hull_from_file) {
-  std::ifstream test_file(ppc::util::GetAbsolutePath("seq/shishkarev_a_gift_wraping_algorithm/data/test.txt"));
+  std::ifstream test_file(ppc::util::GetAbsolutePath("omp/shishkarev_a_gift_wraping_algorithm/data/test.txt"));
 
   size_t count = 0;
   test_file >> count;
