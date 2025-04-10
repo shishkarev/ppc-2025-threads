@@ -74,7 +74,6 @@ bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::RunImpl() {
     else if (initial_candidate == p)
       initial_candidate = (p > 0) ? 0 : 1;
 
-
 #pragma omp parallel
     {
       int num_threads = omp_get_num_threads();
