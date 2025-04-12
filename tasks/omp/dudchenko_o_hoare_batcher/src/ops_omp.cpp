@@ -4,7 +4,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <cstddef>
 #include <vector>
 
 bool dudchenko_o_hoare_batcher_omp::TestTaskOpenMP::PreProcessingImpl() {
