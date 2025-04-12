@@ -26,8 +26,7 @@ TEST(shishkarev_a_gift_wraping_algorithm_tbb, test_pipeline_run) {
   task_data_tbb->outputs.emplace_back(reinterpret_cast<uint8_t*>(out.data()));
   task_data_tbb->outputs_count.emplace_back(out.size());
 
-  auto test_task_tbb =
-      std::make_shared<shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB>(task_data_tbb);
+  auto test_task_tbb = std::make_shared<shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB>(task_data_tbb);
 
   auto perf_attr = std::make_shared<ppc::core::PerfAttr>();
   perf_attr->num_running = 10;
@@ -61,8 +60,7 @@ TEST(shishkarev_a_gift_wraping_algorithm_tbb, test_task_run) {
   task_data_tbb->outputs.emplace_back(reinterpret_cast<uint8_t*>(out.data()));
   task_data_tbb->outputs_count.emplace_back(out.size());
 
-  auto test_task_tbb =
-      std::make_shared<shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB>(task_data_tbb);
+  auto test_task_tbb = std::make_shared<shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB>(task_data_tbb);
 
   auto perf_attr = std::make_shared<ppc::core::PerfAttr>();
   perf_attr->num_running = 1000;

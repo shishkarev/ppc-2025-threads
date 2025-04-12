@@ -25,9 +25,8 @@ std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex> shishkarev_a_gift_w
 
 namespace {
 
-void FindStartPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& input,
-                   int& start_idx,
-                   shishkarev_a_gift_wraping_algorithm_tbb::Vertex& start_point) {
+void FindStartPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& input, int& start_idx,
+                    shishkarev_a_gift_wraping_algorithm_tbb::Vertex& start_point) {
   start_point = {INT_MAX, INT_MAX};
   for (size_t i = 0; i < input.size(); i++) {
     if ((input[i].y < start_point.y) || ((input[i].y == start_point.y) && (input[i].x > start_point.x))) {
@@ -37,11 +36,8 @@ void FindStartPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::V
   }
 }
 
-void FindNextPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& input,
-                  int p,
-                  size_t& q,
-                  double& min_angle,
-                  double& max_length) {
+void FindNextPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& input, int p, size_t& q,
+                   double& min_angle, double& max_length) {
   min_angle = DBL_MAX;
   max_length = 0;
   for (size_t i = 0; i < input.size(); i++) {
@@ -78,8 +74,8 @@ bool shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB::PreProcessingImpl() {
 }
 
 bool shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB::ValidationImpl() {
-  if (task_data->inputs_count.size() != 1 || task_data->outputs_count.size() != 1 || 
-      task_data->inputs.size() != 1 || task_data->outputs.size() != 1) {
+  if (task_data->inputs_count.size() != 1 || task_data->outputs_count.size() != 1 || task_data->inputs.size() != 1 ||
+      task_data->outputs.size() != 1) {
     return false;
   }
 
@@ -108,7 +104,7 @@ bool shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB::RunImpl() {
 
   int start_idx;
   Vertex start_point;
-  
+
   oneapi::tbb::task_arena arena(1);
   arena.execute([&] {
     tbb::task_group tg;
