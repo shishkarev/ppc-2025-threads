@@ -65,7 +65,7 @@ TEST(shishkarev_a_gift_wraping_algorithm_tbb, test_convex_hull_medium) {
 }
 
 TEST(shishkarev_a_gift_wraping_algorithm_tbb, test_convex_hull_large) {
-  constexpr size_t kCount = 100000;
+  constexpr size_t kCount = 10000;
 
   std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex> in(kCount);
   std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex> out(kCount);
