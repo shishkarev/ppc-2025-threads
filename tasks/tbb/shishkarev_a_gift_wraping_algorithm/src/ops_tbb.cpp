@@ -73,7 +73,7 @@ bool shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB::PreProcessingImpl() {
   return true;
 }
 
-bool shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB::ValidationImpl() {
+bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::ValidationImpl() {
   if (task_data->inputs_count.size() != 1 || task_data->outputs_count.size() != 1 || task_data->inputs.size() != 1 ||
       task_data->outputs.size() != 1) {
     return false;
@@ -94,8 +94,11 @@ bool shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB::ValidationImpl() {
 }
 
 bool shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB::RunImpl() {
-  if (input_.size() < 3) {
-    output_ = input_;
+    if (input_.size() < 3) {
+    output_.clear();
+    if (!input_.empty()) {
+      output_.insert(output_.end(), input_.begin(), input_.end());
+    }
     return true;
   }
 
@@ -133,14 +136,11 @@ bool shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB::RunImpl() {
 }
 
 bool shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB::PostProcessingImpl() {
-  if (!task_data->outputs[0]) {
-    return false;
-  }
 
   auto* out_ptr = reinterpret_cast<Vertex*>(task_data->outputs[0]);
   size_t copy_size = std::min(output_.size(), static_cast<size_t>(task_data->outputs_count[0]));
   if (copy_size > 0 && output_.data()) {
-    std::memcpy(out_ptr, output_.data(), copy_size * sizeof(Vertex));
+    std::copy(output_.begin(), output_.begin() + copy_size, out_ptr);
   }
 
   return true;
