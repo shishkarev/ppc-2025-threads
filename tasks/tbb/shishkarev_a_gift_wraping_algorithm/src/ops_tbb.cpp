@@ -17,22 +17,21 @@ namespace {
 
 int FindStartPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& input) {
   int start_point = 0;
-  tbb::parallel_for(tbb::blocked_range<size_t>(1, input.size()),
-    [&](const tbb::blocked_range<size_t>& range) {
-      int local_start = start_point;
-      for (size_t i = range.begin(); i < range.end(); ++i) {
-        if ((input[i].y < input[local_start].y) ||
-            ((input[i].y == input[local_start].y) && (input[i].x > input[local_start].x))) {
-          local_start = static_cast<int>(i);
-        }
+  tbb::parallel_for(tbb::blocked_range<size_t>(1, input.size()), [&](const tbb::blocked_range<size_t>& range) {
+    int local_start = start_point;
+    for (size_t i = range.begin(); i < range.end(); ++i) {
+      if ((input[i].y < input[local_start].y) ||
+          ((input[i].y == input[local_start].y) && (input[i].x > input[local_start].x))) {
+        local_start = static_cast<int>(i);
       }
-      tbb::mutex mutex;
-      tbb::mutex::scoped_lock lock(mutex);
-      if ((input[local_start].y < input[start_point].y) ||
-          ((input[local_start].y == input[start_point].y) && (input[local_start].x > input[start_point].x))) {
-        start_point = local_start;
-      }
-    });
+    }
+    tbb::mutex mutex;
+    tbb::mutex::scoped_lock lock(mutex);
+    if ((input[local_start].y < input[start_point].y) ||
+        ((input[local_start].y == input[start_point].y) && (input[local_start].x > input[start_point].x))) {
+      start_point = local_start;
+    }
+  });
   return start_point;
 }
 
@@ -53,20 +52,19 @@ int FindNextPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Ver
   };
   tbb::enumerable_thread_specific<ThreadData> tls;
 
-  tbb::parallel_for(tbb::blocked_range<size_t>(0, input.size()),
-    [&](const tbb::blocked_range<size_t>& range) {
-      ThreadData& local = tls.local();
-      if (local.q == -1) local.q = initial_candidate;
+  tbb::parallel_for(tbb::blocked_range<size_t>(0, input.size()), [&](const tbb::blocked_range<size_t>& range) {
+    ThreadData& local = tls.local();
+    if (local.q == -1) local.q = initial_candidate;
 
-      for (size_t i = range.begin(); i < range.end(); ++i) {
-        if (static_cast<int>(i) == p) continue;
+    for (size_t i = range.begin(); i < range.end(); ++i) {
+      if (static_cast<int>(i) == p) continue;
 
-        const auto angle = input[p].Angle(input[local.q], input[i]);
-        if (angle < 0 || (angle == 0 && input[p].Length(input[i]) > input[p].Length(input[local.q]))) {
-          local.q = static_cast<int>(i);
-        }
+      const auto angle = input[p].Angle(input[local.q], input[i]);
+      if (angle < 0 || (angle == 0 && input[p].Length(input[i]) > input[p].Length(input[local.q]))) {
+        local.q = static_cast<int>(i);
       }
-    });
+    }
+  });
 
   int q = initial_candidate;
   for (const auto& thread_data : tls) {
