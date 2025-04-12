@@ -11,7 +11,7 @@
 #include "tbb/shishkarev_a_gift_wraping_algorithm/include/ops_tbb.hpp"
 
 TEST(shishkarev_a_gift_wraping_algorithm_tbb, test_pipeline_run) {
-  constexpr int kCount = 1000;
+  constexpr int kCount = 10000000;
 
   std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex> in(kCount);
   std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex> out(kCount);
@@ -45,7 +45,7 @@ TEST(shishkarev_a_gift_wraping_algorithm_tbb, test_pipeline_run) {
 }
 
 TEST(shishkarev_a_gift_wraping_algorithm_tbb, test_task_run) {
-  constexpr int kCount = 1000;
+  constexpr int kCount = 100000000;
 
   std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex> in(kCount);
   std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex> out(kCount);
@@ -63,7 +63,7 @@ TEST(shishkarev_a_gift_wraping_algorithm_tbb, test_task_run) {
   auto test_task_tbb = std::make_shared<shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB>(task_data_tbb);
 
   auto perf_attr = std::make_shared<ppc::core::PerfAttr>();
-  perf_attr->num_running = 1000;
+  perf_attr->num_running = 10000;
   const auto t0 = std::chrono::high_resolution_clock::now();
   perf_attr->current_timer = [&] {
     auto current_time_point = std::chrono::high_resolution_clock::now();
