@@ -94,7 +94,7 @@ bool shishkarev_a_gift_wraping_algorithm_omp::TestTaskOpenMP::ValidationImpl() {
 }
 
 bool shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB::RunImpl() {
-    if (input_.size() < 3) {
+  if (input_.size() < 3) {
     output_.clear();
     if (!input_.empty()) {
       output_.insert(output_.end(), input_.begin(), input_.end());
@@ -136,7 +136,6 @@ bool shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB::RunImpl() {
 }
 
 bool shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB::PostProcessingImpl() {
-
   auto* out_ptr = reinterpret_cast<Vertex*>(task_data->outputs[0]);
   size_t copy_size = std::min(output_.size(), static_cast<size_t>(task_data->outputs_count[0]));
   if (copy_size > 0 && output_.data()) {
