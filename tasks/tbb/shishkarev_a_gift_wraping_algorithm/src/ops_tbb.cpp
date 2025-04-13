@@ -1,6 +1,8 @@
 #include "tbb/shishkarev_a_gift_wraping_algorithm/include/ops_tbb.hpp"
 
-#include <tbb/tbb.h>
+#include <tbb/parallel_for.h>
+#include <tbb/enumerable_thread_specific.h>
+#include <tbb/mutex.h>
 
 #include <algorithm>
 #include <cmath>
@@ -9,9 +11,6 @@
 #include <set>
 #include <utility>
 #include <vector>
-
-#include "oneapi/tbb/task_arena.h"
-#include "oneapi/tbb/task_group.h"
 
 namespace {
 
@@ -37,27 +36,35 @@ int FindStartPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Ve
 
 int FindNextPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& input, int p) {
   int initial_candidate = (p + 1) % static_cast<int>(input.size());
-  if (initial_candidate == p && input.size() > 1) {
-    initial_candidate = (p + 2) % static_cast<int>(input.size());
-  }
+  
   if (input.size() <= 1) {
-    initial_candidate = p;
-  } else if (initial_candidate == p) {
-    initial_candidate = (p > 0) ? 0 : 1;
+    return p;
+  }
+
+  if (initial_candidate == p) {
+    if (input.size() > 1) {
+      initial_candidate = (p + 2) % static_cast<int>(input.size());
+    } else {
+      initial_candidate = (p > 0) ? 0 : 1;
+    }
   }
 
   struct ThreadData {
-    int q;
-    ThreadData() : q(-1) {}
+    int q{-1};
   };
+  
   tbb::enumerable_thread_specific<ThreadData> tls;
 
   tbb::parallel_for(tbb::blocked_range<size_t>(0, input.size()), [&](const tbb::blocked_range<size_t>& range) {
     ThreadData& local = tls.local();
-    if (local.q == -1) local.q = initial_candidate;
+    if (local.q == -1) {
+      local.q = initial_candidate;
+    }
 
     for (size_t i = range.begin(); i < range.end(); ++i) {
-      if (static_cast<int>(i) == p) continue;
+      if (static_cast<int>(i) == p) {
+        continue;
+      }
 
       const auto angle = input[p].Angle(input[local.q], input[i]);
       if (angle < 0 || (angle == 0 && input[p].Length(input[i]) > input[p].Length(input[local.q]))) {
