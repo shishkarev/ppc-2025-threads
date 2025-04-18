@@ -1,5 +1,6 @@
 #include "tbb/shishkarev_a_gift_wraping_algorithm/include/ops_tbb.hpp"
 
+#include <tbb/blocked_range.h>
 #include <tbb/enumerable_thread_specific.h>
 #include <tbb/mutex.h>
 #include <tbb/parallel_for.h>
@@ -35,37 +36,44 @@ int FindStartPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Ve
 }
 
 int FindNextPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& input, int p) {
-  if (input.size() <= 1) {
-    return p;
+  int initial_candidate = (p + 1) % static_cast<int>(input.size());
+  if (initial_candidate == p && input.size() > 1) {
+    initial_candidate = (p + 2) % static_cast<int>(input.size());
   }
-
-  const int initial_candidate = (p + 1) % static_cast<int>(input.size());
-  if (initial_candidate == p) {
-    initial_candidate = (input.size() > 1) ? (p + 2) % static_cast<int>(input.size()) : ((p > 0) ? 0 : 1);
+  if (input.size() <= 1) {
+    initial_candidate = p;
+  } else if (initial_candidate == p) {
+    initial_candidate = (p > 0) ? 0 : 1;
   }
 
   struct ThreadData {
-    int q = initial_candidate;
+    int q;
+    ThreadData() : q(-1) {}
   };
-
   tbb::enumerable_thread_specific<ThreadData> tls;
 
   tbb::parallel_for(tbb::blocked_range<size_t>(0, input.size()), [&](const tbb::blocked_range<size_t>& range) {
     ThreadData& local = tls.local();
+    if (local.q == -1) local.q = initial_candidate;
+
     for (size_t i = range.begin(); i < range.end(); ++i) {
       if (static_cast<int>(i) == p) continue;
 
       const auto angle = input[p].Angle(input[local.q], input[i]);
-      const bool update = angle < 0 || (angle == 0 && input[p].Length(input[i]) > input[p].Length(input[local.q]));
-      if (update) local.q = static_cast<int>(i);
+      if (angle < 0 || (angle == 0 && input[p].Length(input[i]) > input[p].Length(input[local.q]))) {
+        local.q = static_cast<int>(i);
+      }
     }
   });
 
   int q = initial_candidate;
   for (const auto& thread_data : tls) {
-    const auto angle = input[p].Angle(input[q], input[thread_data.q]);
-    const bool update = angle < 0 || (angle == 0 && input[p].Length(input[thread_data.q]) > input[p].Length(input[q]));
-    if (update) q = thread_data.q;
+    if (thread_data.q != -1) {
+      const auto angle = input[p].Angle(input[q], input[thread_data.q]);
+      if (angle < 0 || (angle == 0 && input[p].Length(input[thread_data.q]) > input[p].Length(input[q]))) {
+        q = thread_data.q;
+      }
+    }
   }
 
   return q;
