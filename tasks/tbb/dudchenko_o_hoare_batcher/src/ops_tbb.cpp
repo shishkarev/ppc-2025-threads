@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstddef>
 #include <vector>
 
 bool dudchenko_o_hoare_batcher_tbb::TestTaskOpenMP::PreProcessingImpl() {
@@ -77,7 +78,7 @@ void dudchenko_o_hoare_batcher_tbb::TestTaskOpenMP::QuickSort(std::vector<int>& 
     return;
   }
 
-  int mid = low + (high - low) / 2;
+  int mid = low + ((high - low) / 2);
   if (arr[mid] < arr[low]) {
     std::swap(arr[mid], arr[low]);
   }
