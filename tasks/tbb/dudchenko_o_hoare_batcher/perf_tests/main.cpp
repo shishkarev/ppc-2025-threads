@@ -12,7 +12,7 @@
 #include "core/task/include/task.hpp"
 #include "tbb/dudchenko_o_hoare_batcher/include/ops_tbb.hpp"
 
-constexpr int kCount = 10000;
+constexpr int kCount = 10000000;
 
 TEST(dudchenko_o_hoare_batcher_tbb, test_pipeline_run) {
   std::vector<int> in(kCount);
