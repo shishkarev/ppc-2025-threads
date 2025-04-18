@@ -19,7 +19,7 @@ int FindStartPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Ve
   struct LocalMin {
     int index;
     LocalMin(int idx) : index(idx) {}
- 
+
     void Combine(const LocalMin& other, const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& input) {
       const auto& a = input[index];
       const auto& b = input[other.index];
