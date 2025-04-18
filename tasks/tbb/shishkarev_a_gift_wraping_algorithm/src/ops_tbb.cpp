@@ -2,9 +2,8 @@
 
 #include <tbb/blocked_range.h>
 #include <tbb/enumerable_thread_specific.h>
-#include <tbb/mutex.h>
 #include <tbb/parallel_for.h>
-#include <tbb/tbb.h>
+#include <tbb/parallel_reduce.h>
 
 #include <algorithm>
 #include <cmath>
@@ -17,23 +16,40 @@
 namespace {
 
 int FindStartPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& input) {
-  int start_point = 0;
-  tbb::parallel_for(tbb::blocked_range<size_t>(1, input.size()), [&](const tbb::blocked_range<size_t>& range) {
-    int local_start = start_point;
-    for (size_t i = range.begin(); i < range.end(); ++i) {
-      if ((input[i].y < input[local_start].y) ||
-          ((input[i].y == input[local_start].y) && (input[i].x > input[local_start].x))) {
-        local_start = static_cast<int>(i);
+  struct LocalMin {
+    int index;
+    LocalMin(int idx) : index(idx) {}
+    
+    void combine(const LocalMin& other, const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& input) {
+      const auto& a = input[index];
+      const auto& b = input[other.index];
+      if ((b.y < a.y) || (b.y == a.y && b.x > a.x)) {
+        index = other.index;
       }
     }
-    tbb::mutex mutex;
-    tbb::mutex::scoped_lock lock(mutex);
-    if ((input[local_start].y < input[start_point].y) ||
-        ((input[local_start].y == input[start_point].y) && (input[local_start].x > input[start_point].x))) {
-      start_point = local_start;
-    }
-  });
-  return start_point;
+  };
+
+  LocalMin result(0);
+  tbb::parallel_reduce(
+      tbb::blocked_range<size_t>(0, input.size()),
+      LocalMin(0),
+      [&](const tbb::blocked_range<size_t>& range, LocalMin local_result) -> LocalMin {
+        for (size_t i = range.begin(); i < range.end(); ++i) {
+          const auto& a = input[local_result.index];
+          const auto& b = input[i];
+          if ((b.y < a.y) || (b.y == a.y && b.x > a.x)) {
+            local_result.index = static_cast<int>(i);
+          }
+        }
+        return local_result;
+      },
+      [&](LocalMin a, LocalMin b) -> LocalMin {
+        a.combine(b, input);
+        return a;
+      }
+  );
+
+  return result.index;
 }
 
 int GetInitialCandidate(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& input, int p) {
@@ -95,7 +111,7 @@ int FindNextPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Ver
 std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex> RemoveDuplicates(
     const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& points) {
   std::set<shishkarev_a_gift_wraping_algorithm_tbb::Vertex> unique_points(points.begin(), points.end());
-  return std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>(unique_points.begin(), unique_points.end());
+  return {unique_points.begin(), unique_points.end()};
 }
 
 }  // namespace
