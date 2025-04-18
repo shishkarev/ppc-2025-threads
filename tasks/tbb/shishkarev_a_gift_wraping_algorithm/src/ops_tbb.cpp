@@ -1,6 +1,6 @@
 #include "tbb/shishkarev_a_gift_wraping_algorithm/include/ops_tbb.hpp"
 
-#include <tbb.h>
+#include <tbb/tbb.h>
 #include <tbb/blocked_range.h>
 #include <tbb/enumerable_thread_specific.h>
 #include <tbb/mutex.h>
@@ -10,7 +10,6 @@
 #include <cmath>
 #include <cstddef>
 #include <cstring>
-#include <set>
 #include <utility>
 #include <vector>
 
@@ -40,24 +39,25 @@ int GetInitialCandidate(const std::vector<shishkarev_a_gift_wraping_algorithm_tb
   if (input.size() <= 1) {
     return p;
   }
-  
+
   int candidate = (p + 1) % static_cast<int>(input.size());
   if (candidate != p) {
     return candidate;
   }
-  
+
   return (p > 0) ? 0 : 1;
 }
 
 bool IsBetterCandidate(const shishkarev_a_gift_wraping_algorithm_tbb::Vertex& p_vertex,
-                      const shishkarev_a_gift_wraping_algorithm_tbb::Vertex& current,
-                      const shishkarev_a_gift_wraping_algorithm_tbb::Vertex& candidate) {
+                       const shishkarev_a_gift_wraping_algorithm_tbb::Vertex& current,
+                       const shishkarev_a_gift_wraping_algorithm_tbb::Vertex& candidate) {
   const auto angle = p_vertex.Angle(current, candidate);
   return angle < 0 || (angle == 0 && p_vertex.Length(candidate) > p_vertex.Length(current));
 }
 
 int FindNextPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& input, int p) {
-  int initial_candidate = GetInitialCandidate(input, p);
+  int initial_candidate = 0;
+  initial_candidate = GetInitialCandidate(input, p);
 
   struct ThreadData {
     int q{-1};
@@ -67,10 +67,14 @@ int FindNextPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Ver
 
   tbb::parallel_for(tbb::blocked_range<size_t>(0, input.size()), [&](const tbb::blocked_range<size_t>& range) {
     ThreadData& local = tls.local();
-    if (local.q == -1) { local.q = initial_candidate; }
+    if (local.q == -1) {
+      local.q = initial_candidate;
+    }
 
     for (size_t i = range.begin(); i < range.end(); ++i) {
-      if (static_cast<int>(i) == p) { continue; }
+      if (static_cast<int>(i) == p) {
+        continue;
+      }
       if (IsBetterCandidate(input[p], input[local.q], input[i])) {
         local.q = static_cast<int>(i);
       }
@@ -137,12 +141,14 @@ bool shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB::RunImpl() {
 
   output_.clear();
 
-  int start_point = FindStartPoint(input_);
+  int start_point = 0;
+  start_point = FindStartPoint(input_);
   int p = start_point;
   std::vector<Vertex> hull_points;
   do {
     hull_points.push_back(input_[p]);
-    int q = FindNextPoint(input_, p);
+    int q = 0;
+    q = FindNextPoint(input_, p);
     if (q == -1 || q == p) {
       break;
     }

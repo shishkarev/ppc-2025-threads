@@ -24,7 +24,7 @@ struct Vertex {
   }
 };
 
-std::vector<Vertex> RemoveDuplicates(const std::vector<Vertex>& points);
+static std::vector<Vertex> RemoveDuplicates(const std::vector<Vertex>& points);
 
 class TestTaskTBB : public ppc::core::Task {
  public:
