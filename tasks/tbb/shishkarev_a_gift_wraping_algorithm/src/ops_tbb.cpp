@@ -1,10 +1,5 @@
 #include "tbb/shishkarev_a_gift_wraping_algorithm/include/ops_tbb.hpp"
 
-#include <tbb/blocked_range.h>
-#include <tbb/enumerable_thread_specific.h>
-#include <tbb/parallel_for.h>
-#include <tbb/parallel_reduce.h>
-
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
@@ -13,6 +8,11 @@
 #include <utility>
 #include <vector>
 
+#include <tbb/blocked_range.h>
+#include <tbb/enumerable_thread_specific.h>
+#include <tbb/parallel_for.h>
+#include <tbb/parallel_reduce.h>
+
 namespace {
 
 int FindStartPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& input) {
@@ -20,7 +20,7 @@ int FindStartPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Ve
     int index;
     LocalMin(int idx) : index(idx) {}
     
-    void combine(const LocalMin& other, const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& input) {
+    void Combine(const LocalMin& other, const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& input) {
       const auto& a = input[index];
       const auto& b = input[other.index];
       if ((b.y < a.y) || (b.y == a.y && b.x > a.x)) {
