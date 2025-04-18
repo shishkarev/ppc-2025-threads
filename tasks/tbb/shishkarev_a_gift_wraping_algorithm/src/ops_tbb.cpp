@@ -1,15 +1,16 @@
 #include "tbb/shishkarev_a_gift_wraping_algorithm/include/ops_tbb.hpp"
 
-#include <tbb/tbb.h>
 #include <tbb/blocked_range.h>
 #include <tbb/enumerable_thread_specific.h>
 #include <tbb/mutex.h>
 #include <tbb/parallel_for.h>
+#include <tbb/tbb.h>
 
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <cstring>
+#include <set>
 #include <utility>
 #include <vector>
 
@@ -91,13 +92,13 @@ int FindNextPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Ver
   return q;
 }
 
-}  // namespace
-
-std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex> shishkarev_a_gift_wraping_algorithm_tbb::RemoveDuplicates(
-    const std::vector<Vertex>& points) {
-  std::set<Vertex> unique_points(points.begin(), points.end());
-  return {unique_points.begin(), unique_points.end()};
+std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex> RemoveDuplicates(
+    const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& points) {
+  std::set<shishkarev_a_gift_wraping_algorithm_tbb::Vertex> unique_points(points.begin(), points.end());
+  return std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>(unique_points.begin(), unique_points.end());
 }
+
+}  // namespace
 
 bool shishkarev_a_gift_wraping_algorithm_tbb::TestTaskTBB::PreProcessingImpl() {
   int input_size = static_cast<int>(task_data->inputs_count[0]);
