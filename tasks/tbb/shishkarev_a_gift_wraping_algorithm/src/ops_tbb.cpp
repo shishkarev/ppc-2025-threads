@@ -1,5 +1,10 @@
 #include "tbb/shishkarev_a_gift_wraping_algorithm/include/ops_tbb.hpp"
 
+#include <tbb/blocked_range.h>
+#include <tbb/enumerable_thread_specific.h>
+#include <tbb/parallel_for.h>
+#include <tbb/parallel_reduce.h>
+
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
@@ -8,18 +13,13 @@
 #include <utility>
 #include <vector>
 
-#include <tbb/blocked_range.h>
-#include <tbb/enumerable_thread_specific.h>
-#include <tbb/parallel_for.h>
-#include <tbb/parallel_reduce.h>
-
 namespace {
 
 int FindStartPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& input) {
   struct LocalMin {
     int index;
     LocalMin(int idx) : index(idx) {}
-    
+ 
     void Combine(const LocalMin& other, const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Vertex>& input) {
       const auto& a = input[index];
       const auto& b = input[other.index];
@@ -31,8 +31,7 @@ int FindStartPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Ve
 
   LocalMin result(0);
   tbb::parallel_reduce(
-      tbb::blocked_range<size_t>(0, input.size()),
-      LocalMin(0),
+      tbb::blocked_range<size_t>(0, input.size()), LocalMin(0),
       [&](const tbb::blocked_range<size_t>& range, LocalMin local_result) -> LocalMin {
         for (size_t i = range.begin(); i < range.end(); ++i) {
           const auto& a = input[local_result.index];
@@ -44,10 +43,9 @@ int FindStartPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Ve
         return local_result;
       },
       [&](LocalMin a, LocalMin b) -> LocalMin {
-        a.combine(b, input);
+        a.Combine(b, input);
         return a;
-      }
-  );
+      });
 
   return result.index;
 }
