@@ -20,13 +20,13 @@ bool dudchenko_o_hoare_batcher_tbb::TestTaskOpenMP::PreProcessingImpl() {
 }
 
 bool dudchenko_o_hoare_batcher_tbb::TestTaskOpenMP::ValidationImpl() {
-  if (task_data->inputs_count.empty() || task_data->outputs_count.empty() || 
-      task_data->inputs.empty() || task_data->outputs.empty()) {
+  if (task_data->inputs_count.empty() || task_data->outputs_count.empty() || task_data->inputs.empty() ||
+      task_data->outputs.empty()) {
     return false;
   }
 
-  if (task_data->inputs_count.size() != 1 || task_data->outputs_count.size() != 1 || 
-      task_data->inputs.size() != 1 || task_data->outputs.size() != 1) {
+  if (task_data->inputs_count.size() != 1 || task_data->outputs_count.size() != 1 || task_data->inputs.size() != 1 ||
+      task_data->outputs.size() != 1) {
     return false;
   }
 
@@ -61,12 +61,11 @@ bool dudchenko_o_hoare_batcher_tbb::TestTaskOpenMP::RunImpl() {
 bool dudchenko_o_hoare_batcher_tbb::TestTaskOpenMP::PostProcessingImpl() {
   try {
     auto* out_ptr = reinterpret_cast<int*>(task_data->outputs[0]);
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, output_.size()),
-      [&](const tbb::blocked_range<size_t>& range) {
-        for (size_t i = range.begin(); i < range.end(); i++) {
-          out_ptr[i] = output_[i];
-        }
-      });
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, output_.size()), [&](const tbb::blocked_range<size_t>& range) {
+      for (size_t i = range.begin(); i < range.end(); i++) {
+        out_ptr[i] = output_[i];
+      }
+    });
     return true;
   } catch (...) {
     return false;
@@ -78,7 +77,6 @@ void dudchenko_o_hoare_batcher_tbb::TestTaskOpenMP::QuickSort(std::vector<int>& 
     return;
   }
 
-  // Use median-of-three for better pivot selection
   int mid = low + (high - low) / 2;
   if (arr[mid] < arr[low]) {
     std::swap(arr[mid], arr[low]);
@@ -92,12 +90,8 @@ void dudchenko_o_hoare_batcher_tbb::TestTaskOpenMP::QuickSort(std::vector<int>& 
 
   int pi = Partition(arr, low, high);
 
-  // Only parallelize for larger chunks to avoid overhead
   if (high - low > 10000) {
-    tbb::parallel_invoke(
-      [&]() { QuickSort(arr, low, pi - 1); },
-      [&]() { QuickSort(arr, pi + 1, high); }
-    );
+    tbb::parallel_invoke([&]() { QuickSort(arr, low, pi - 1); }, [&]() { QuickSort(arr, pi + 1, high); });
   } else {
     QuickSort(arr, low, pi - 1);
     QuickSort(arr, pi + 1, high);
@@ -138,17 +132,17 @@ void dudchenko_o_hoare_batcher_tbb::TestTaskOpenMP::BatcherMerge(std::vector<int
   std::vector<int> right_array(n2);
 
   tbb::parallel_invoke(
-    [&]() {
-      for (int i = 0; i < n1; i++) {
-        left_array[i] = arr[left + i];
-      }
-    },
-    [&]() {
-      for (int j = 0; j < n2; j++) {
-        right_array[j] = arr[mid + 1 + j];
-      }
-    }
-  );
+      [&]() {
+        for (int i = 0; i < n1; i++) {
+          left_array[i] = arr[left + i];
+        }
+      },
+      [&]() {
+        for (int j = 0; j < n2; j++) {
+          right_array[j] = arr[mid + 1 + j];
+        }
+      });
+
 
   int i = 0;
   int j = 0;
