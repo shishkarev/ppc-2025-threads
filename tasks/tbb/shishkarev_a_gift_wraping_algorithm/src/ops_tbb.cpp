@@ -39,13 +39,13 @@ int FindNextPoint(const std::vector<shishkarev_a_gift_wraping_algorithm_tbb::Ver
     return p;
   }
 
-  int initial_candidate = (p + 1) % static_cast<int>(input.size());
+  const int initial_candidate = (p + 1) % static_cast<int>(input.size());
   if (initial_candidate == p) {
     initial_candidate = (input.size() > 1) ? (p + 2) % static_cast<int>(input.size()) : ((p > 0) ? 0 : 1);
   }
 
   struct ThreadData {
-    int q{initial_candidate};
+    int q = initial_candidate;
   };
 
   tbb::enumerable_thread_specific<ThreadData> tls;
