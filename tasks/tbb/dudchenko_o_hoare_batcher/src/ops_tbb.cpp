@@ -143,7 +143,6 @@ void dudchenko_o_hoare_batcher_tbb::TestTaskOpenMP::BatcherMerge(std::vector<int
         }
       });
 
-
   int i = 0;
   int j = 0;
   int k = left;
