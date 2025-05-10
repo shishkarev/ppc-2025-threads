@@ -29,7 +29,23 @@ bool shishkarev_a_gift_wraping_algorithm_stl::TestTaskSTL::PreProcessingImpl() {
 }
 
 bool shishkarev_a_gift_wraping_algorithm_stl::TestTaskSTL::ValidationImpl() {
-  return task_data->inputs_count[0] == task_data->outputs_count[0];
+  if (task_data->inputs_count.size() != 1 || task_data->outputs_count.size() != 1 || task_data->inputs.size() != 1 ||
+      task_data->outputs.size() != 1) {
+    return false;
+  }
+
+  if (task_data->inputs_count[0] != task_data->outputs_count[0]) {
+    return false;
+  }
+
+  if (task_data->inputs_count[0] > 0 && task_data->inputs[0] == nullptr) {
+    return false;
+  }
+  if (task_data->outputs_count[0] > 0 && task_data->outputs[0] == nullptr) {
+    return false;
+  }
+
+  return true;
 }
 
 bool shishkarev_a_gift_wraping_algorithm_stl::TestTaskSTL::RunImpl() {
