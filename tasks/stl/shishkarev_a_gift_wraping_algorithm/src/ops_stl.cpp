@@ -61,15 +61,15 @@ bool shishkarev_a_gift_wraping_algorithm_stl::TestTaskSTL::RunImpl() {
     std::iota(indices.begin(), indices.end(), 0);
 
     q = std::transform_reduce(
-      indices.begin(), indices.end(), q, [](size_t a, size_t b) { return std::min(a, b); },
-      [this, p](size_t i) {
-        const auto angle = input_[p].Angle(input_[(p + 1) % input_.size()], input_[i]);
-        if (angle < 0 ||
-            (angle == 0 && input_[p].Length(input_[i]) > input_[p].Length(input_[(p + 1) % input_.size()]))) {
-          return i;
-        }
-        return (p + 1) % input_.size();
-      });
+        indices.begin(), indices.end(), q, [](size_t a, size_t b) { return std::min(a, b); },
+        [this, p](size_t i) {
+          const auto angle = input_[p].Angle(input_[(p + 1) % input_.size()], input_[i]);
+          if (angle < 0 ||
+              (angle == 0 && input_[p].Length(input_[i]) > input_[p].Length(input_[(p + 1) % input_.size()]))) {
+            return i;
+          }
+          return (p + 1) % input_.size();
+        });
 
     p = static_cast<int>(q);
   } while (p != start_point);
