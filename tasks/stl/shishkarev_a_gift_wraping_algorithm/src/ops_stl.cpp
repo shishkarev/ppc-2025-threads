@@ -22,7 +22,7 @@ bool shishkarev_a_gift_wraping_algorithm_stl::TestTaskSTL::PreProcessingImpl() {
   input_ = RemoveDuplicates(input_);
 
   unsigned int output_size = task_data->outputs_count[0];
-  output_ = std::vector<Vertex>(output_size, {0, 0});
+  output_.reserve(output_size); // Reserve space instead of initializing with values
 
   rc_size_ = static_cast<int>(std::sqrt(input_size));
   return true;
@@ -51,41 +51,30 @@ bool shishkarev_a_gift_wraping_algorithm_stl::TestTaskSTL::ValidationImpl() {
 bool shishkarev_a_gift_wraping_algorithm_stl::TestTaskSTL::RunImpl() {
   if (input_.size() < 3) {
     output_.clear();
-    for (size_t i = 1; i < input_.size(); ++i) {
-      output_[i] = input_[i];
-    }
+    output_.insert(output_.end(), input_.begin(), input_.end());
     return true;
   }
 
   output_.clear();
+  output_.reserve(input_.size()); // Reserve space for worst case
 
-  std::vector<int> start_points(input_.size());
-  std::iota(start_points.begin(), start_points.end(), 0);
-
-  int start_point = std::transform_reduce(
-      start_points.begin(), start_points.end(), 0, [](int a, int b) { return std::min(a, b); },
-      [this](int i) {
-        return ((input_[i].y < input_[0].y) || ((input_[i].y == input_[0].y) && (input_[i].x > input_[0].x))) ? i : 0;
-      });
+  // Find leftmost point
+  auto start_point = std::min_element(input_.begin(), input_.end(), 
+    [](const Vertex& a, const Vertex& b) {
+      return a.x < b.x || (a.x == b.x && a.y < b.y);
+    }) - input_.begin();
 
   int p = start_point;
   do {
     output_.push_back(input_[p]);
     size_t q = (p + 1) % input_.size();
 
-    std::vector<size_t> indices(input_.size());
-    std::iota(indices.begin(), indices.end(), 0);
-
-    q = std::transform_reduce(
-        indices.begin(), indices.end(), q, [](size_t a, size_t b) { return std::min(a, b); },
-        [this, p](size_t i) {
-          const auto angle = input_[p].Angle(input_[(p + 1) % input_.size()], input_[i]);
-          if (angle < 0 ||
-              (angle == 0 && input_[p].Length(input_[i]) > input_[p].Length(input_[(p + 1) % input_.size()]))) {
-            return i;
-          }
-          return (p + 1) % input_.size();
-        });
+    for (size_t i = 0; i < input_.size(); i++) {
+      const auto angle = input_[p].Angle(input_[q], input_[i]);
+      if (angle < 0 || (angle == 0 && input_[p].Length(input_[i]) > input_[p].Length(input_[q]))) {
+        q = i;
+      }
+    }
 
     p = static_cast<int>(q);
   } while (p != start_point);
