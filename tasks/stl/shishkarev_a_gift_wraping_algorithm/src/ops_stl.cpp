@@ -69,6 +69,7 @@ bool shishkarev_a_gift_wraping_algorithm_stl::TestTaskSTL::RunImpl() {
 
   const int num_threads = ppc::util::GetPPCNumThreads();
   std::vector<std::thread> threads(num_threads);
+  std::vector<size_t> thread_results_(num_threads);
 
   int p = start_point;
   do {
@@ -81,7 +82,7 @@ bool shishkarev_a_gift_wraping_algorithm_stl::TestTaskSTL::RunImpl() {
       size_t start = t * chunk_size;
       size_t end = (t == num_threads - 1) ? input_.size() : (t + 1) * chunk_size;
 
-      threads[t] = std::thread([this, start, end, p, q, t]() {
+      threads[t] = std::thread([this, start, end, p, q, t, &thread_results_]() {
         size_t local_q = q;
         for (size_t i = start; i < end; i++) {
           const auto angle = input_[p].Angle(input_[local_q], input_[i]);
