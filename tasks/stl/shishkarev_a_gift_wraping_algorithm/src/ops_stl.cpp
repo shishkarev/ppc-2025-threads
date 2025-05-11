@@ -27,7 +27,7 @@ bool shishkarev_a_gift_wraping_algorithm_stl::TestTaskSTL::PreProcessingImpl() {
   unsigned int output_size = task_data->outputs_count[0];
   output_.reserve(output_size);
 
-  results_.resize(ppc::util::GetPPCNumThreads());
+  thread_results_.resize(ppc::util::GetPPCNumThreads());
   rc_size_ = static_cast<int>(std::sqrt(input_size));
   return true;
 }
@@ -89,7 +89,7 @@ bool shishkarev_a_gift_wraping_algorithm_stl::TestTaskSTL::RunImpl() {
             local_q = i;
           }
         }
-        results_[t] = local_q;
+        thread_results_[t] = local_q;
       });
     }
 
@@ -97,11 +97,11 @@ bool shishkarev_a_gift_wraping_algorithm_stl::TestTaskSTL::RunImpl() {
       thread.join();
     }
 
-    q = results_[0];
+    q = thread_results_[0];
     for (int t = 1; t < num_threads; ++t) {
-      const auto angle = input_[p].Angle(input_[q], input_[results_[t]]);
-      if (angle < 0 || (angle == 0 && input_[p].Length(input_[results_[t]]) > input_[p].Length(input_[q]))) {
-        q = results_[t];
+      const auto angle = input_[p].Angle(input_[q], input_[thread_results_[t]]);
+      if (angle < 0 || (angle == 0 && input_[p].Length(input_[thread_results_[t]]) > input_[p].Length(input_[q]))) {
+        q = thread_results_[t];
       }
     }
 
