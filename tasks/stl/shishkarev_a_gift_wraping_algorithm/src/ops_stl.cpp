@@ -22,7 +22,7 @@ bool shishkarev_a_gift_wraping_algorithm_stl::TestTaskSTL::PreProcessingImpl() {
   input_ = RemoveDuplicates(input_);
 
   unsigned int output_size = task_data->outputs_count[0];
-  output_.reserve(output_size); // Reserve space instead of initializing with values
+  output_.reserve(output_size);
 
   rc_size_ = static_cast<int>(std::sqrt(input_size));
   return true;
@@ -56,13 +56,12 @@ bool shishkarev_a_gift_wraping_algorithm_stl::TestTaskSTL::RunImpl() {
   }
 
   output_.clear();
-  output_.reserve(input_.size()); // Reserve space for worst case
+  output_.reserve(input_.size());
 
-  // Find leftmost point
-  auto start_point = std::min_element(input_.begin(), input_.end(), 
-    [](const Vertex& a, const Vertex& b) {
-      return a.x < b.x || (a.x == b.x && a.y < b.y);
-    }) - input_.begin();
+  auto start_point =
+      std::min_element(input_.begin(), input_.end(),
+                       [](const Vertex& a, const Vertex& b) { return a.x < b.x || (a.x == b.x && a.y < b.y); }) -
+      input_.begin();
 
   int p = start_point;
   do {
