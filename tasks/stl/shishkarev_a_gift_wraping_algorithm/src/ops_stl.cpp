@@ -6,7 +6,10 @@
 #include <execution>
 #include <numeric>
 #include <set>
+#include <thread>
 #include <vector>
+
+#include "core/util/include/util.hpp"
 
 std::vector<shishkarev_a_gift_wraping_algorithm_stl::Vertex> shishkarev_a_gift_wraping_algorithm_stl::RemoveDuplicates(
     const std::vector<shishkarev_a_gift_wraping_algorithm_stl::Vertex>& points) {
@@ -24,6 +27,7 @@ bool shishkarev_a_gift_wraping_algorithm_stl::TestTaskSTL::PreProcessingImpl() {
   unsigned int output_size = task_data->outputs_count[0];
   output_.reserve(output_size);
 
+  results_.resize(ppc::util::GetPPCNumThreads());
   rc_size_ = static_cast<int>(std::sqrt(input_size));
   return true;
 }
@@ -63,15 +67,41 @@ bool shishkarev_a_gift_wraping_algorithm_stl::TestTaskSTL::RunImpl() {
                        [](const Vertex& a, const Vertex& b) { return a.x < b.x || (a.x == b.x && a.y < b.y); }) -
       input_.begin();
 
+  const int num_threads = ppc::util::GetPPCNumThreads();
+  std::vector<std::thread> threads(num_threads);
+
   int p = start_point;
   do {
     output_.push_back(input_[p]);
     size_t q = (p + 1) % input_.size();
 
-    for (size_t i = 0; i < input_.size(); i++) {
-      const auto angle = input_[p].Angle(input_[q], input_[i]);
-      if (angle < 0 || (angle == 0 && input_[p].Length(input_[i]) > input_[p].Length(input_[q]))) {
-        q = i;
+    const size_t chunk_size = input_.size() / num_threads;
+    
+    for (int t = 0; t < num_threads; ++t) {
+      size_t start = t * chunk_size;
+      size_t end = (t == num_threads - 1) ? input_.size() : (t + 1) * chunk_size;
+      
+      threads[t] = std::thread([this, start, end, p, q, t]() {
+        size_t local_q = q;
+        for (size_t i = start; i < end; i++) {
+          const auto angle = input_[p].Angle(input_[local_q], input_[i]);
+          if (angle < 0 || (angle == 0 && input_[p].Length(input_[i]) > input_[p].Length(input_[local_q]))) {
+            local_q = i;
+          }
+        }
+        results_[t] = local_q;
+      });
+    }
+
+    for (auto& thread : threads) {
+      thread.join();
+    }
+
+    q = results_[0];
+    for (int t = 1; t < num_threads; ++t) {
+      const auto angle = input_[p].Angle(input_[q], input_[results_[t]]);
+      if (angle < 0 || (angle == 0 && input_[p].Length(input_[results_[t]]) > input_[p].Length(input_[q]))) {
+        q = results_[t];
       }
     }
 
