@@ -76,11 +76,11 @@ bool shishkarev_a_gift_wraping_algorithm_stl::TestTaskSTL::RunImpl() {
     size_t q = (p + 1) % input_.size();
 
     const size_t chunk_size = input_.size() / num_threads;
-    
+
     for (int t = 0; t < num_threads; ++t) {
       size_t start = t * chunk_size;
       size_t end = (t == num_threads - 1) ? input_.size() : (t + 1) * chunk_size;
-      
+
       threads[t] = std::thread([this, start, end, p, q, t]() {
         size_t local_q = q;
         for (size_t i = start; i < end; i++) {
