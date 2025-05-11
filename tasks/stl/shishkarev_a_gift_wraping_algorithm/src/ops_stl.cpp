@@ -27,7 +27,6 @@ bool shishkarev_a_gift_wraping_algorithm_stl::TestTaskSTL::PreProcessingImpl() {
   unsigned int output_size = task_data->outputs_count[0];
   output_.reserve(output_size);
 
-  thread_results_.resize(ppc::util::GetPPCNumThreads());
   rc_size_ = static_cast<int>(std::sqrt(input_size));
   return true;
 }
